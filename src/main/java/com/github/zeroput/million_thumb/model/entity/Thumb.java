@@ -25,17 +25,17 @@ public class Thumb implements Serializable {
     /**
      * 
      */
-    private Long userid;
+    private Long userId;
 
     /**
      * 
      */
-    private Long blogid;
+    private Long blogId;
 
     /**
      * 创建时间
      */
-    private Date createtime;
+    private Date createTime;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

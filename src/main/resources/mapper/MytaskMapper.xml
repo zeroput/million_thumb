@@ -5,10 +5,10 @@
 <mapper namespace="com.github.zeroput.million_thumb.mapper.MytaskMapper">
 
     <resultMap id="BaseResultMap" type="com.github.zeroput.million_thumb.model.entity.Mytask">
-            <id property="taskid" column="TaskID" jdbcType="INTEGER"/>
+            <id property="taskID" column="TaskID" jdbcType="INTEGER"/>
             <result property="title" column="Title" jdbcType="VARCHAR"/>
-            <result property="iscompleted" column="IsCompleted" jdbcType="TINYINT"/>
-            <result property="duedate" column="DueDate" jdbcType="TIMESTAMP"/>
+            <result property="isCompleted" column="IsCompleted" jdbcType="TINYINT"/>
+            <result property="dueDate" column="DueDate" jdbcType="TIMESTAMP"/>
             <result property="priority" column="Priority" jdbcType="OTHER"/>
     </resultMap>
 

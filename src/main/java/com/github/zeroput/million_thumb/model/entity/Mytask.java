@@ -4,9 +4,10 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 
@@ -19,7 +20,7 @@ public class Mytask implements Serializable {
      * 
      */
     @TableId(type = IdType.AUTO)
-    private Integer taskid;
+    private Integer taskID;
 
     /**
      * 
@@ -29,12 +30,12 @@ public class Mytask implements Serializable {
     /**
      * 
      */
-    private Integer iscompleted;
+    private Integer isCompleted;
 
     /**
      * 
      */
-    private Date duedate;
+    private Date dueDate;
 
     /**
      * 

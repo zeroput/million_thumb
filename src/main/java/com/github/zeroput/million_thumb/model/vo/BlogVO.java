@@ -37,6 +37,6 @@ public class BlogVO {
     /**  
      * 是否已点赞  
      */  
-    private Boolean hasThumb;  
+    private Boolean hasThumb;
   
 }
