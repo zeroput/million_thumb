@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.zeroput.million_thumb.mapper.MytaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.github.zeroput.million_thumb.model.entity.Mytask">
+            <id property="taskid" column="TaskID" jdbcType="INTEGER"/>
+            <result property="title" column="Title" jdbcType="VARCHAR"/>
+            <result property="iscompleted" column="IsCompleted" jdbcType="TINYINT"/>
+            <result property="duedate" column="DueDate" jdbcType="TIMESTAMP"/>
+            <result property="priority" column="Priority" jdbcType="OTHER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        TaskID,Title,IsCompleted,
+        DueDate,Priority
+    </sql>
+</mapper>

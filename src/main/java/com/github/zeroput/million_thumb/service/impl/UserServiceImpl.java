@@ -1,9 +1,11 @@
 package com.github.zeroput.million_thumb.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.zeroput.million_thumb.constant.UserConstant;
 import com.github.zeroput.million_thumb.mapper.UserMapper;
 import com.github.zeroput.million_thumb.model.entity.User;
 import com.github.zeroput.million_thumb.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,6 +17,16 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService {
 
+
+    @Override
+    public User getCurrentUser(HttpServletRequest request) {
+
+        Object myAttr = request.getSession().getAttribute(UserConstant.LOGIN_USER);
+        if (myAttr != null) {
+            return (User) myAttr;
+        }
+        return null;
+    }
 }
 
 

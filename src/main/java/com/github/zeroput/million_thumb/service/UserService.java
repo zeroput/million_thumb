@@ -2,6 +2,7 @@ package com.github.zeroput.million_thumb.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.zeroput.million_thumb.model.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
 * @author Arch
@@ -10,4 +11,5 @@ import com.github.zeroput.million_thumb.model.entity.User;
 */
 public interface UserService extends IService<User> {
 
+    public User getCurrentUser(HttpServletRequest request);
 }
