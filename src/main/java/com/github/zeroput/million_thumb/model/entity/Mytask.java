@@ -19,7 +19,7 @@ public class Mytask implements Serializable {
     /**
      * 
      */
-    @TableId(type = IdType.AUTO)
+    @TableId(type = IdType.ASSIGN_ID)
     private Integer taskID;
 
     /**

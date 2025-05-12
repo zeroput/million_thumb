@@ -30,6 +30,11 @@ public class BlogController {
     public BaseResponse<List<BlogVO>> listAll(HttpServletRequest request) {
         List<Blog> list = blogService.list();
         List<BlogVO> blogVOList = blogService.getBlogVOList(list, request);
+        blogVOList.forEach(blogVO -> {
+           if( blogVO.getHasThumb() == null){
+               blogVO.setHasThumb(false);
+           }
+        });
 
         return ResultUtils.success(blogVOList);
 
