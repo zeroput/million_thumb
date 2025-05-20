@@ -59,8 +59,8 @@ public class SyncThumb2DBJob {
   
     public void syncThumb2DBByDate(String date) {  
         // 获取到临时点赞和取消点赞数据  
-        String tempThumbKey = RedisKeyUtil.getTempThumbKey(date);
-        Map<Object, Object> allTempThumbMap = redisTemplate.opsForHash().entries(tempThumbKey);
+        String tempThumbKey = RedisKeyUtil.getTempThumbKey(date);//thumb:temp:16:23:50
+        Map<Object, Object> allTempThumbMap = redisTemplate.opsForHash().entries(tempThumbKey);  // 这个是key 500:7，这个是value 1
         boolean thumbMapEmpty = CollUtil.isEmpty(allTempThumbMap);
   
         // 同步 点赞 到数据库  

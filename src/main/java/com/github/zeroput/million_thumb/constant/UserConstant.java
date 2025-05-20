@@ -26,7 +26,7 @@ public interface UserConstant {
     /**
      * 登陆用户
      */
-    String LOGIN_USER = "tomcat";
+    String LOGIN_USER = "user_login";
 
     // endregion
 }

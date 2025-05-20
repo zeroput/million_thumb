@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("user")
 public class UserController {  
@@ -24,6 +26,11 @@ public class UserController {
         return ResultUtils.success(user);
     }
 
+    @GetMapping("/logout")
+    public BaseResponse<String> logout(HttpServletRequest request) {
+        request.getSession().removeAttribute(UserConstant.LOGIN_USER);
+        return ResultUtils.success("登出成功");
+    }
 
     @GetMapping("/get/currenLogin")
     public BaseResponse<User> getLoginUser(HttpServletRequest request) {

@@ -2,6 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress SqlDialectInspection -->
 <mapper namespace="com.github.zeroput.million_thumb.mapper.BlogMapper">
 
     <resultMap id="BaseResultMap" type="com.github.zeroput.million_thumb.model.entity.Blog">
