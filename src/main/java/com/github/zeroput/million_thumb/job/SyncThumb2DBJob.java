@@ -70,7 +70,7 @@ public class SyncThumb2DBJob {
             return;  
         }  
         ArrayList<Thumb> thumbList = new ArrayList<>();
-        LambdaQueryWrapper<Thumb> wrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<Thumb> deleteLinq = new LambdaQueryWrapper<>();
         boolean needRemove = false;  
         for (Object userIdBlogIdObj : allTempThumbMap.keySet()) {  
             String userIdBlogId = (String) userIdBlogIdObj;  
@@ -86,22 +86,22 @@ public class SyncThumb2DBJob {
                 thumbList.add(thumb);  
             } else if (thumbType == ThumbTypeEnum.MINUS_ONE.getValue()) {
                 // 拼接查询条件，批量删除  
-                needRemove = true;  
-                wrapper.or().eq(Thumb::getUserId, userId).eq(Thumb::getBlogId, blogId);  
+                needRemove = true;
+                deleteLinq.or().eq(Thumb::getUserId, userId).eq(Thumb::getBlogId, blogId);
             } else {  
                 if (thumbType != ThumbTypeEnum.UNCHANGING.getValue()) {
                     log.warn("数据异常：{}", userId + "," + blogId + "," + thumbType);  
                 }  
                 continue;  
             }  
-            // 计算点赞增量  
+            // 计算点赞增量  +1 -1 或者 +0
             blogThumbCountMap.put(blogId, blogThumbCountMap.getOrDefault(blogId, 0L) + thumbType);  
         }  
         // 批量插入  
         thumbService.saveBatch(thumbList);  
         // 批量删除  
         if (needRemove) {  
-            thumbService.remove(wrapper);  
+            thumbService.remove(deleteLinq);
         }  
         // 批量更新博客点赞量  
         if (!blogThumbCountMap.isEmpty()) {  

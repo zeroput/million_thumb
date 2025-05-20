@@ -5,8 +5,8 @@ import com.github.zeroput.million_thumb.common.BaseResponse;
 import com.github.zeroput.million_thumb.common.ResultUtils;
 import com.github.zeroput.million_thumb.model.dto.thumb.DoThumbRequestDto;
 import com.github.zeroput.million_thumb.service.ThumbService;
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("thumb")
 public class ThumbController {
 
-    @Resource
+    @Autowired
     @Qualifier("thumbRedisService")
+//    @Resource(name = "thumbRedisService") // 可以合并成一个
     private ThumbService thumbService;
 
 
