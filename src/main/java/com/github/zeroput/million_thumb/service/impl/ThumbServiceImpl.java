@@ -3,6 +3,7 @@ package com.github.zeroput.million_thumb.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.zeroput.million_thumb.common.cache.CacheManager;
 import com.github.zeroput.million_thumb.constant.ThumbConstant;
 import com.github.zeroput.million_thumb.exception.BusinessException;
 import com.github.zeroput.million_thumb.exception.ErrorCode;
@@ -37,6 +38,7 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb>
     private final TransactionTemplate transactionTemplate;
 
     private final RedisTemplate<String, Object> redisTemplate;
+    private final CacheManager cacheManager;
 
     @Override
     public Boolean doThumbAction(DoThumbRequestDto doThumbRequestDto, HttpServletRequest request) {
@@ -84,7 +86,13 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb>
 //                int insert = this.baseMapper.insert(thumb);
                 boolean savedSuccess = this.save(thumb);
                 if (savedSuccess) {
-                    redisTemplate.opsForHash().put(ThumbConstant.USER_THUMB_KEY_PREFIX + currentUser.getId(), blogId.toString(),thumb.getId());
+//                    redisTemplate.opsForHash().put(ThumbConstant.USER_THUMB_KEY_PREFIX + currentUser.getId(), blogId.toString(),thumb.getId());
+                    String userKey = ThumbConstant.USER_THUMB_KEY_PREFIX + currentUser.getId();
+                    String blogIdKey = blogId.toString();
+                    Long thumbRelationId = thumb.getId();
+
+                    redisTemplate.opsForHash().put(userKey, blogIdKey, thumbRelationId);// add to redis
+                    cacheManager.putIfPresent(userKey, blogIdKey, thumbRelationId);// add to caffeine middle ware
                 }
 
                 return updateOK && savedSuccess;
@@ -124,8 +132,11 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb>
 //                }
 
                 // use cache
-                Object thumbIdObj = redisTemplate.opsForHash().get(ThumbConstant.USER_THUMB_KEY_PREFIX + currentUser.getId(), blogId.toString());
-                if (thumbIdObj == null) {
+//                Object thumbIdObj = redisTemplate.opsForHash().get(ThumbConstant.USER_THUMB_KEY_PREFIX + currentUser.getId(), blogId.toString());
+                String userId = ThumbConstant.USER_THUMB_KEY_PREFIX + currentUser.getId();
+                String blogIdStr = blogId.toString();
+                Object thumbIdObj = cacheManager.get(userId, blogIdStr);
+                if (thumbIdObj == null || thumbIdObj.equals(ThumbConstant.UN_THUMB_CONSTANT)) {
                     throw new RuntimeException("用户未点赞");
                 }
 
@@ -140,7 +151,9 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb>
 
                 // 更新 并删除点赞记录完成
                 if (success) {
-                    redisTemplate.opsForHash().delete(ThumbConstant.USER_THUMB_KEY_PREFIX + currentUser.getId(), blogId.toString());
+//                    redisTemplate.opsForHash().delete(ThumbConstant.USER_THUMB_KEY_PREFIX + currentUser.getId(), blogId.toString());
+                    redisTemplate.opsForHash().delete(userId, blogIdStr);
+                    cacheManager.putIfPresent(userId, blogIdStr, ThumbConstant.UN_THUMB_CONSTANT);
 
                 }
 
@@ -158,10 +171,18 @@ public class ThumbServiceImpl extends ServiceImpl<ThumbMapper, Thumb>
     @Override
     public Boolean hasThumbed(Long blogId, Long userId) {
         // 数据示例  value为 点赞记录 id
-        // thumbed-userId1 - blog01 value1
-        //                 - blog02 value2
-        //                 - blog03 value3
-        return redisTemplate.opsForHash().hasKey(ThumbConstant.USER_THUMB_KEY_PREFIX + userId, blogId.toString());
+        // thumbed-userId1 - blog01 thumbId1
+        //                 - blog02 thumbId2
+        //                 - blog03 thumbId3
+
+//        return redisTemplate.opsForHash().hasKey(ThumbConstant.USER_THUMB_KEY_PREFIX + userId, blogId.toString());
+        Object thumbIdObj = cacheManager.get(ThumbConstant.USER_THUMB_KEY_PREFIX + userId, blogId.toString());
+        if (thumbIdObj == null) {
+            return false;
+        }
+
+        Long thumbIdObj1 = (Long) thumbIdObj;
+        return !thumbIdObj1.equals(ThumbConstant.UN_THUMB_CONSTANT);//0L
     }
 
 

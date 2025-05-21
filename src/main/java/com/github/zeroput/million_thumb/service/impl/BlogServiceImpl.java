@@ -15,6 +15,7 @@ import com.github.zeroput.million_thumb.service.UserService;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -39,7 +40,7 @@ public class BlogServiceImpl extends ServiceImpl<BlogMapper, Blog>
     private UserService userService;
 
     @Lazy//解决循环引用
-    @Resource
+    @Resource(name = "thumbDefaultService")
     private ThumbService thumbService;
 
 

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ThumbController {
 
     @Autowired
-    @Qualifier("thumbRedisService")
+    @Qualifier("thumbDefaultService")// thumbRedisService
 //    @Resource(name = "thumbRedisService") // 可以合并成一个
     private ThumbService thumbService;
 
